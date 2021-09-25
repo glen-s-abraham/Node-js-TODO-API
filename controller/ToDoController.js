@@ -1,4 +1,5 @@
 const ToDo = require('./../model/ToDo');
+const APIFeatures = require('./../utils/APIFeatures');
 
 exports.createToDo = async (req,res)=>{
     try{ 
@@ -54,7 +55,11 @@ exports.deleteToDo = async (req,res)=>{
 
 exports.getAllToDos = async (req,res)=>{
     try{
-        const toDos = await ToDo.find();
+
+        const features = new APIFeatures(ToDo.find(),req.query)
+                        .filter().sort().limit().paginate();;
+        
+        const toDos = await features.query;
         res.status(200).json({
             status: 'success',
             toDos
